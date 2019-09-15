@@ -9,6 +9,10 @@ import matplotlib.pyplot as plt
 import util
 import random
 import math
+import imageio
+from tempfile import TemporaryFile
+ALL = TemporaryFile()
+all_filter_responses = []
 
 def extract_filter_responses(image):
     '''
@@ -30,8 +34,8 @@ def extract_filter_responses(image):
     # Array of scale sizes for the filters, in unit pixels
     scale = [1, 2, 4, 8, 8 * math.sqrt(2)]
 
-    # Allocate the output array of images
-    output = np.zeros((H, W, 4 * len(scale) * 3))
+    # Allocate the output filter response array of images
+    filter_responses = np.zeros((H, W, 4 * len(scale) * 3))
 
     
     # ----- TODO -----
@@ -41,21 +45,22 @@ def extract_filter_responses(image):
 
             # 3 channels have to be in the output array consecutively, thus the weird output image index 
             # (1) Gaussian
-            output[:, :, (i * 12) + (0 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i])
+            filter_responses[:, :, (i * 12) + (0 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i])
 
             # (2) Laplacian of Gaussian
-            output[:, :, (i * 12) + (3 + j)] = scipy.ndimage.gaussian_laplace(image[:, :, j], sigma = scale[i])
+            filter_responses[:, :, (i * 12) + (3 + j)] = scipy.ndimage.gaussian_laplace(image[:, :, j], sigma = scale[i])
 
             # (3) Derivative of Gaussian in the x direction
             # The 3rd argument in the gaussian_filter function is the derivative order in ? axis direction
             # scipy deals with arrays, not images, so (0, 1) is the direction of the change of the second index,
             # which if the second index changes, it is in the horizontal direction, thus the x axis
-            output[:, :, (i * 12) + (6 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i], order = (0, 1))
+            filter_responses[:, :, (i * 12) + (6 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i], order = (0, 1))
 
             # (4) Derivative of Gaussian in the y direction
-            output[:, :, (i * 12) + (9 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i], order = (1, 0))
+            filter_responses[:, :, (i * 12) + (9 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i], order = (1, 0))
+    
 
-    return output
+    return filter_responses
 
 def get_visual_words(image, dictionary):
     '''
@@ -89,8 +94,35 @@ def compute_dictionary_one_image(args):
 
 
     i, alpha, image_path = args
+    global all_filter_responses
     # ----- TODO -----
+
+    image = imageio.imread("../data/" + image_path)
+    filter_responses = extract_filter_responses(image)
     
+    H, W = image[:, :, 0].shape
+    numOfPix = H * W
+    filter_responses_1D = np.reshape(filter_responses, (numOfPix, 60))
+    
+    rand_ind = np.random.permutation(numOfPix)
+    
+    rand_ind = rand_ind[0 : alpha]    
+    
+    filter_responses_random = filter_responses_1D[rand_ind, :]
+    
+    """
+    if i == 0:
+        np.save(ALL, filter_responses_random)
+    else:
+        all_filter_responses = np.load(ALL)
+        all_filter_responses = np.concatenate((all_filter_responses, filter_responses_random), axis = 1)
+        np.save(ALL, all_filter_responses)
+    """
+
+    if i == 0:
+        all_filter_responses = filter_responses_random
+    else:
+        np.concatenate((all_filter_responses, filter_responses_random), axis = 1)
     pass
 
 def compute_dictionary(num_workers=2):
@@ -105,7 +137,19 @@ def compute_dictionary(num_workers=2):
     '''
 
     train_data = np.load("../data/train_data.npz")
+    #train_data = np.load("../data/files.npy")
     # ----- TODO -----
+    #print(train_data['files.npy'])
+    #print(train_data['labels.npy'])
+
+    image_paths = train_data['files.npy']
+
+    alpha = 200
+
+    for i in range(len(image_paths)):
+        args = i, alpha, image_paths[i]
+        compute_dictionary_one_image(args)
+
     
     pass
 
