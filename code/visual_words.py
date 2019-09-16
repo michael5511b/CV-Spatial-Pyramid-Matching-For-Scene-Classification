@@ -11,7 +11,6 @@ import random
 import math
 import imageio
 from tempfile import TemporaryFile
-ALL = TemporaryFile()
 all_filter_responses = []
 
 def extract_filter_responses(image):
@@ -136,6 +135,7 @@ def compute_dictionary(num_workers=2):
     * dictionary: numpy.ndarray of shape (K, 3F)
     '''
 
+    global all_filter_responses
     train_data = np.load("../data/train_data.npz")
     #train_data = np.load("../data/files.npy")
     # ----- TODO -----
@@ -149,6 +149,11 @@ def compute_dictionary(num_workers=2):
     for i in range(len(image_paths)):
         args = i, alpha, image_paths[i]
         compute_dictionary_one_image(args)
+
+    K = 100
+    kmeans = sklearn.cluster.KMeans(n_clusters=K).fit(all_filter_responses)
+    dictionary = kmeans.cluster_centers_
+    np.save('dictionary.npy', dictionary)
 
     
     pass
