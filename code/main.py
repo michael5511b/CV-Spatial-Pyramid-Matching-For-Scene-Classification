@@ -26,6 +26,7 @@ if __name__ == '__main__':
     dictionary = np.load('dictionary.npy')
     #img = visual_words.get_visual_words(image,dictionary)
     wordmap = visual_words.get_visual_words(image, dictionary)
+    print(wordmap)
     open('file.jpg', 'a').close
     util.save_wordmap(wordmap, 'file.jpg')
     #visual_recog.build_recognition_system(num_workers=num_cores)
