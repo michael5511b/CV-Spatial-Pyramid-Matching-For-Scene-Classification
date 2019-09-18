@@ -172,7 +172,7 @@ def compute_dictionary(num_workers=2):
         args = i, alpha, image_paths[i]
         compute_dictionary_one_image(args)
 
-    K = 100
+    K = 200
     kmeans = sklearn.cluster.KMeans(n_clusters=K).fit(all_filter_responses)
     dictionary = kmeans.cluster_centers_
     np.save('dictionary.npy', dictionary)

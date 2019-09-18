@@ -18,11 +18,11 @@ if __name__ == '__main__':
     image = image.astype('float')/255
     
     filter_responses = visual_words.extract_filter_responses(image)
-    """
-    util.display_filter_responses(filter_responses)
+    
+    #util.display_filter_responses(filter_responses)
 
     visual_words.compute_dictionary(num_workers=num_cores)
-    """
+    
     dictionary = np.load('dictionary.npy')
     #img = visual_words.get_visual_words(image,dictionary)
     wordmap = visual_words.get_visual_words(image, dictionary)
