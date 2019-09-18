@@ -73,8 +73,25 @@ def get_visual_words(image, dictionary):
     '''
 
     # ----- TODO -----
-    
-    pass
+    print(dictionary.shape)
+    # dictionary (100, 60)
+    H, W = image[:, :, 0].shape
+    numOfPix = H * W
+    eucliDist = scipy.spatial.distance.cdist(np.reshape(extract_filter_responses(image), (numOfPix, 60)), dictionary, 'euclidean')
+    print(numOfPix)
+    # numOfPix = 187500
+    print(eucliDist.shape)
+    # euclidDist (187500, 100), euclidean distant of each pixel to each of the 100 visual words
+    wordmap = np.zeros(numOfPix)
+    for i in range(numOfPix):
+        wordmap[i] = min(eucliDist[i, :])
+
+    #reshape back to original shape
+    print(wordmap.shape)
+    wordmap = np.reshape(wordmap, (H, W))
+    print(wordmap.shape)
+    return wordmap
+
 
 
 def compute_dictionary_one_image(args):

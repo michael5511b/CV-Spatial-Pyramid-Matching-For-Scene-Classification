@@ -71,3 +71,4 @@ def save_wordmap(wordmap, filename):
     plt.axis('off')
     plt.imshow(wordmap)
     plt.savefig(filename, pad_inches=0)
+    plt.show()
