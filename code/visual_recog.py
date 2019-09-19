@@ -95,7 +95,15 @@ def get_feature_from_wordmap(wordmap, dict_size):
     '''
 
     # ----- TODO -----
+    H, W = wordmap.shape
+    hist = np.zeros(dict_size)
+    for i in range(H):
+        for j in range(W):
+            hist[int(wordmap[i][j])] = hist[int(wordmap[i][j])] + 1
     
+    #np.set_printoptions(suppress=True)
+    #print(hist)
+
     pass
 
 
