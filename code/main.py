@@ -7,6 +7,7 @@ import visual_recog
 import deep_recog
 import skimage
 
+
 if __name__ == '__main__':
     
     num_cores = util.get_num_CPU()
@@ -27,7 +28,7 @@ if __name__ == '__main__':
     #===============================================================#
 
     # Q1.3
-    
+    """
     dictionary = np.load('dictionary.npy')
 
     # Image 1
@@ -49,6 +50,7 @@ if __name__ == '__main__':
     wordmap3 = visual_words.get_visual_words(image3, dictionary)
 
     fig = plt.figure(1)
+    
 
     plt.subplot(231)
     plt.imshow(image1)
@@ -56,7 +58,7 @@ if __name__ == '__main__':
     plt.axis('equal')
 
     plt.subplot(234)
-    plt.imshow(wordmap1)
+    plt.imshow(wordmap1, cmap = 'hsv')
     plt.axis('off')
     plt.axis('equal')
 
@@ -66,7 +68,7 @@ if __name__ == '__main__':
     plt.axis('equal')
 
     plt.subplot(235)
-    plt.imshow(wordmap2)
+    plt.imshow(wordmap2, cmap = 'hsv')
     plt.axis('off')
     plt.axis('equal')
 
@@ -76,14 +78,14 @@ if __name__ == '__main__':
     plt.axis('equal')
 
     plt.subplot(236)
-    plt.imshow(wordmap3)
+    plt.imshow(wordmap3, cmap = 'hsv')
     plt.axis('off')
     plt.axis('equal')
 
     plt.subplots_adjust(left = None, bottom = None, right = None, top = None, wspace = 0.1, hspace = 0.1)
-    visual_recog.get_feature_from_wordmap(wordmap1, 200)
+    # visual_recog.get_feature_from_wordmap_SPM(wordmap1, 4, 200)
     plt.show()
-    
+    """
     #===============================================================#
     
     # Q2.1
@@ -94,7 +96,7 @@ if __name__ == '__main__':
     
 
     #util.save_wordmap(wordmap, 'file.jpg')
-    #visual_recog.build_recognition_system(num_workers=num_cores)
+    visual_recog.build_recognition_system(num_workers=num_cores)
 
     #conf, accuracy = visual_recog.evaluate_recognition_system(num_workers=num_cores)
     #print(conf)
