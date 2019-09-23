@@ -54,7 +54,7 @@ if __name__ == '__main__':
     #
     # fig = plt.figure(1)
     #
-    #
+    # # Displaying the images and the wordmaps
     # plt.subplot(231)
     # plt.imshow(image1)
     # plt.axis('off')
@@ -86,12 +86,7 @@ if __name__ == '__main__':
     # plt.axis('equal')
     #
     # plt.subplots_adjust(left = None, bottom = None, right = None, top = None, wspace = 0.1, hspace = 0.1)
-    # # visual_recog.get_feature_from_wordmap_SPM(wordmap1, 4, 200)
     # plt.show()
-
-    #===============================================================#
-    
-    # Q2.1
 
     #===============================================================#
 

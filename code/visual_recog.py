@@ -126,6 +126,8 @@ def evaluate_recognition_system(num_workers):
     return conf, accuracy
 
 
+# Due to the complications of passing multiple arguments into a multi-processing procedure
+# I have re-written the code of get_image_feature(...) into build_recognition_system_helper_func(img_path):
 def get_image_feature(file_path, dictionary, layer_num, K):
     """
     Extracts the spatial pyramid matching feature.
