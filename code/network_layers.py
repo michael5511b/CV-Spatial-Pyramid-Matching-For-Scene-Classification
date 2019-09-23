@@ -50,7 +50,7 @@ def extract_deep_feature(x, vgg16_weights):
 	# vgg16_weights[i][1] = weight if convolution of linear, kernel size if the layer is a max pooling layer
 	# vgg16_weights[i][2] = bias if convolution or linear
 
-	L = len(vgg16_weights)
+	# "fc7" layer is at layer index 33
 	for i in range(34):
 		print("layer: ", i, " || ", vgg16_weights[i][0])
 		if vgg16_weights[i][0] == 'conv2d':
@@ -157,6 +157,7 @@ def linear(x, W, b):
 	# x = np.reshape(x, (-1, 1))
 	# y = np.dot(W, x) + np.reshape(b, (b.shape[0], 1))
 
+	# If this is the first fc, x has to be transposed first
 	try:
 		x = x.transpose(2, 0, 1)
 	except:
