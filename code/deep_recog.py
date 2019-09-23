@@ -198,5 +198,6 @@ def distance_to_set(feature, train_features):
 	"""
 
     # ----- TODO -----
+    # Just the euclidian distance function
     dist = scipy.spatial.distance.cdist(feature, train_features, 'euclidean')
     return dist
