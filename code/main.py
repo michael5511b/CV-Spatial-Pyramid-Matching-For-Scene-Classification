@@ -6,7 +6,11 @@ import visual_words
 import visual_recog
 import deep_recog
 import skimage
+import network_layers
+from multiprocessing import Pool
+import torch
 
+cuda = torch.device('cuda')
 
 if __name__ == '__main__':
     
@@ -95,17 +99,36 @@ if __name__ == '__main__':
     
     
 
-    #util.save_wordmap(wordmap, 'file.jpg')
-    visual_recog.build_recognition_system(num_workers=num_cores)
+    # util.save_wordmap(wordmap, 'file.jpg')
+    # print("num cores = ", num_cores)
+    # visual_recog.build_recognition_system(num_workers=num_cores)
+    # trained_system = np.load('trained_system.npz')
+    # print(trained_system['arr_1.npy'].shape)
 
-    #conf, accuracy = visual_recog.evaluate_recognition_system(num_workers=num_cores)
-    #print(conf)
-    #print(np.diag(conf).sum()/conf.sum())
+    # conf, accuracy = visual_recog.evaluate_recognition_system(num_workers=num_cores)
+    # print(conf)
+    # print('Accuracy: ', accuracy)
+    # print(conf)
+    # print(np.diag(conf).sum()/conf.sum())
 
-    #vgg16 = torchvision.models.vgg16(pretrained=True).double()
-    #vgg16.eval()
-    #deep_recog.build_recognition_system(vgg16,num_workers=num_cores//2)
-    #conf = deep_recog.evaluate_recognition_system(vgg16,num_workers=num_cores//2)
-    #print(conf)
+
+    #Q 3.1
+    # vgg16 = torchvision.models.vgg16(pretrained=True).double()
+    #     # vgg16.eval()
+    #     # path_img1 = "../data/aquarium/sun_aairflxfskjrkepm.jpg"
+    #     # # image1 = skimage.io.imread(path_img1)
+    #     # vgg16_weights = util.get_VGG16_weights()
+    #     # feat = network_layers.extract_deep_feature(image1, vgg16_weights)
+    #     # print(feat.shape)
+
+    #Q3.2
+    # CUDA version
+    #vgg16 = torchvision.models.vgg16(pretrained=True).double().cuda()
+    vgg16 = torchvision.models.vgg16(pretrained=True).double()
+    vgg16.eval()
+    # deep_recog.build_recognition_system(vgg16,num_workers=num_cores // 2)
+    conf, accuracy = deep_recog.evaluate_recognition_system(vgg16,num_workers=num_cores//2)
+    print(conf)
+    print("accuracy: ", accuracy)
     #print(np.diag(conf).sum()/conf.sum())
 

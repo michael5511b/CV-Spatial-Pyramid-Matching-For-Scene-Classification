@@ -62,7 +62,7 @@ def extract_filter_responses(image):
     return filter_responses
 
 def get_visual_words(image, dictionary):
-    '''
+    """
     Compute visual words mapping for the given image using the dictionary of visual words.
 
     [input]
@@ -70,15 +70,15 @@ def get_visual_words(image, dictionary):
 
     [output]
     * wordmap: numpy.ndarray of shape (H, W)
-    '''
+    """
 
     # ----- TODO -----
-    # dictionary (100, 60)
+    # dictionary (200, 60)
     H, W = image[:, :, 0].shape
     numOfPix = H * W
     eucliDist = scipy.spatial.distance.cdist(np.reshape(extract_filter_responses(image), (numOfPix, 60)), dictionary, 'euclidean')
     # numOfPix = 187500
-    # euclidDist (187500, 100), euclidean distant of each pixel to each of the 100 visual words
+    # euclidDist (187500, 200), euclidean distant of each pixel to each of the 100 visual words
     wordmap = np.zeros(numOfPix)
     min_euclid = np.zeros(numOfPix)
     for i in range(numOfPix):
