@@ -44,22 +44,22 @@ def extract_filter_responses(image):
 
             # 3 channels have to be in the output array consecutively, thus the weird output image index 
             # (1) Gaussian
-            filter_responses[:, :, (i * 12) + (0 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i])
+            filter_responses[:, :, (i * 12) + (0 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma=scale[i])
 
             # (2) Laplacian of Gaussian
-            filter_responses[:, :, (i * 12) + (3 + j)] = scipy.ndimage.gaussian_laplace(image[:, :, j], sigma = scale[i])
+            filter_responses[:, :, (i * 12) + (3 + j)] = scipy.ndimage.gaussian_laplace(image[:, :, j], sigma=scale[i])
 
             # (3) Derivative of Gaussian in the x direction
             # The 3rd argument in the gaussian_filter function is the derivative order in ? axis direction
             # scipy deals with arrays, not images, so (0, 1) is the direction of the change of the second index,
             # which if the second index changes, it is in the horizontal direction, thus the x axis
-            filter_responses[:, :, (i * 12) + (6 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i], order = (0, 1))
+            filter_responses[:, :, (i * 12) + (6 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma=scale[i], order=(0, 1))
 
             # (4) Derivative of Gaussian in the y direction
-            filter_responses[:, :, (i * 12) + (9 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma = scale[i], order = (1, 0))
-    
+            filter_responses[:, :, (i * 12) + (9 + j)] = scipy.ndimage.gaussian_filter(image[:, :, j], sigma=scale[i], order=(1, 0))
 
     return filter_responses
+
 
 def get_visual_words(image, dictionary):
     """
@@ -78,7 +78,7 @@ def get_visual_words(image, dictionary):
     numOfPix = H * W
     eucliDist = scipy.spatial.distance.cdist(np.reshape(extract_filter_responses(image), (numOfPix, 60)), dictionary, 'euclidean')
     # numOfPix = 187500
-    # euclidDist (187500, 200), euclidean distant of each pixel to each of the 100 visual words
+    # euclidDist (187500, 200), euclidean distant of each pixel to each of the 200 visual words
     wordmap = np.zeros(numOfPix)
     min_euclid = np.zeros(numOfPix)
     for i in range(numOfPix):
@@ -88,14 +88,13 @@ def get_visual_words(image, dictionary):
         word, = np.where(eucliDist_curr == min_euclid[i])
         wordmap[i] = word 
 
-    #reshape back to original shape
+    # reshape back to original shape
     wordmap = np.reshape(wordmap, (H, W))
     return wordmap
 
 
-
 def compute_dictionary_one_image(args):
-    '''
+    """
     Extracts random samples of the dictionary entries from an image.
     This is a function run by a subprocess.
 
@@ -106,8 +105,7 @@ def compute_dictionary_one_image(args):
 
     [saved]
     * sampled_response: numpy.ndarray of shape (alpha, 3F)
-    '''
-
+    """
 
     i, alpha, image_path = args
     global all_filter_responses
@@ -125,21 +123,13 @@ def compute_dictionary_one_image(args):
     rand_ind = rand_ind[0 : alpha]    
     
     filter_responses_random = filter_responses_1D[rand_ind, :]
-    
-    """
-    if i == 0:
-        np.save(ALL, filter_responses_random)
-    else:
-        all_filter_responses = np.load(ALL)
-        all_filter_responses = np.concatenate((all_filter_responses, filter_responses_random), axis = 1)
-        np.save(ALL, all_filter_responses)
-    """
 
     if i == 0:
         all_filter_responses = filter_responses_random
     else:
-        np.concatenate((all_filter_responses, filter_responses_random), axis = 1)
+        np.concatenate((all_filter_responses, filter_responses_random), axis=1)
     pass
+
 
 def compute_dictionary(num_workers=2):
     '''
@@ -154,10 +144,7 @@ def compute_dictionary(num_workers=2):
 
     global all_filter_responses
     train_data = np.load("../data/train_data.npz")
-    #train_data = np.load("../data/files.npy")
     # ----- TODO -----
-    #print(train_data['files.npy'])
-    #print(train_data['labels.npy'])
 
     image_paths = train_data['files.npy']
 
@@ -172,7 +159,6 @@ def compute_dictionary(num_workers=2):
     dictionary = kmeans.cluster_centers_
     np.save('dictionary.npy', dictionary)
 
-    
     pass
 
 
